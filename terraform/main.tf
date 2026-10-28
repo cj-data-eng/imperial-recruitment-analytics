@@ -74,3 +74,29 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "raw" {
     }
   }
 }
+
+# Athena writes a result file for every query. Delete them after a week
+# so scratch output doesn't pile up (and cost money).
+resource "aws_s3_bucket_lifecycle_configuration" "raw" {
+  bucket = aws_s3_bucket.raw.id
+
+  rule {
+    id     = "expire-athena-query-results"
+    status = "Enabled"
+
+    filter {
+      prefix = "athena-results/"
+    }
+
+    expiration {
+      days = 7
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 1
+    }
+  }
+
+  # Versioning must be switched on before lifecycle rules are added.
+  depends_on = [aws_s3_bucket_versioning.raw]
+}
