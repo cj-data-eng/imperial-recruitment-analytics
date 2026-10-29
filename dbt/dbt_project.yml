@@ -1,0 +1,12 @@
+name: recruitment_analytics
+version: "1.0.0"
+config-version: 2
+profile: recruitment
+
+model-paths: ["models"]
+
+models:
+  recruitment_analytics:
+    staging:
+      # Staging models are views: they store no data, just a saved query.
+      +materialized: view
