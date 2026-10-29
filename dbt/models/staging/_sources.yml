@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    database: awsdatacatalog
+    schema: recruitment_raw
+    tables:
+      - name: programmes
+      - name: crm_enquiries
+      - name: admissions_applications

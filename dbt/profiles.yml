@@ -1,0 +1,15 @@
+recruitment:
+  target: dev
+  outputs:
+    dev:
+      type: athena
+      region_name: eu-west-2
+      database: awsdatacatalog
+      schema: recruitment_analytics   # dbt creates this Glue database for you
+      work_group: recruitment
+      # Query scratch output (expires after 7 days):
+      s3_staging_dir: "s3://{{ env_var('RAW_BUCKET') }}/athena-results/"
+      # Real tables that dbt builds (kept forever). Setting this explicitly
+      # avoids the grocery problem of tables landing in the expiring prefix:
+      s3_data_dir: "s3://{{ env_var('RAW_BUCKET') }}/warehouse/"
+      threads: 4
