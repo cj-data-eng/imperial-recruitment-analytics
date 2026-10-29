@@ -99,4 +99,4 @@ resource "aws_s3_bucket_lifecycle_configuration" "raw" {
 
   # Versioning must be switched on before lifecycle rules are added.
   depends_on = [aws_s3_bucket_versioning.raw]
-}
+}# CI test
