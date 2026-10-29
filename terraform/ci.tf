@@ -4,6 +4,8 @@ locals {
 
   # The same state bucket name you pasted into the backend block.
   state_bucket = "terraform-state-prod-511454199223-eu-west-2-an"
+
+  github_subject = "cj-data-eng@331987610/imperial-recruitment-analytics@1438266908"
 }
 
 # Look up the GitHub OIDC provider that already exists in the account.
@@ -32,7 +34,10 @@ data "aws_iam_policy_document" "plan_trust" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_repo}:pull_request"]
+      values = [
+        "repo:${local.github_subject}:pull_request",
+        "repo:${local.github_repo}:pull_request",
+      ]
     }
   }
 }
@@ -56,7 +61,7 @@ data "aws_iam_policy_document" "apply_trust" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_repo}:ref:refs/heads/main"]
+      values   = ["repo:${local.github_subject}:ref:refs/heads/main"]
     }
   }
 }
