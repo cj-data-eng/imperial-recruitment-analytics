@@ -1,0 +1,26 @@
+name: dbt
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  # dbt's profile reads the bucket name from this variable. Parsing never
+  # connects to AWS, so a placeholder is enough in CI.
+  RAW_BUCKET: ci-placeholder-bucket
+  AWS_DEFAULT_REGION: eu-west-2
+  DBT_PROFILES_DIR: dbt
+  DBT_PROJECT_DIR: dbt
+
+jobs:
+  dbt-parse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: uv run dbt parse
