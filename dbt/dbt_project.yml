@@ -8,5 +8,6 @@ model-paths: ["models"]
 models:
   recruitment_analytics:
     staging:
-      # Staging models are views: they store no data, just a saved query.
       +materialized: view
+    marts:
+      +materialized: table
