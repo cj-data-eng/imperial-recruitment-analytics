@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: fct_enquiry_funnel
+    description: >
+      One row per enquiry, showing how far that person got through the
+      recruitment funnel. Grain: enquiry_id.
+    columns:
+      - name: enquiry_id
+        description: "Unique ID of the enquiry. The test below guards against joins that duplicate rows."
+        data_tests: [unique, not_null]
+      - name: reached_application
+        description: "1 if the person submitted an application, else 0."
+      - name: reached_offer
+        description: "1 if the person was made an offer, else 0."
+      - name: reached_acceptance
+        description: "1 if the person accepted the offer, else 0."
+      - name: reached_enrolment
+        description: "1 if the person enrolled at the start of term, else 0."
+      - name: application_before_enquiry
+        description: "True when the application date is earlier than the enquiry date, which is impossible. The row is kept (the application happened) but flagged, and excluded from timing metrics."
+      - name: days_enquiry_to_application
+        description: "Days between enquiry and application. NULL when there is no application or the dates are out of order."
+
+  - name: funnel_by_channel
+    description: "Funnel counts and conversion rates for each marketing channel."
+    columns:
+      - name: channel
+        data_tests: [unique, not_null]
+      - name: enquiries
+        description: "Number of enquiries. Counted once per person-enquiry after removing duplicates."
+      - name: enquiry_to_application_rate
+        description: "Applications divided by enquiries."
+      - name: application_to_offer_rate
+        description: "Offers divided by applications."
+      - name: offer_to_acceptance_rate
+        description: "Acceptances divided by offers."
+      - name: acceptance_to_enrolment_rate
+        description: "Enrolments divided by acceptances."
+      - name: enquiry_to_enrolment_rate
+        description: "Enrolments divided by enquiries. The headline yield. This is not return on investment, because it ignores cost."
