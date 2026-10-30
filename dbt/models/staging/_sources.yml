@@ -2,9 +2,29 @@ version: 2
 
 sources:
   - name: raw
+    description: "Raw CSV exports landed in S3 and exposed through Glue. Everything is stored as text, exactly as received."
     database: awsdatacatalog
     schema: recruitment_raw
     tables:
       - name: programmes
+        description: "Programme reference list."
+
       - name: crm_enquiries
+        description: >
+          CRM export of enquiries. Known issues: duplicate rows, several spellings
+          of the same country, blanks instead of NULLs, channels in mixed case.
+        columns:
+          - name: enquiry_id
+            data_tests:
+              - unique:
+                  config:
+                    severity: warn   # we expect duplicates here; staging removes them
+
       - name: admissions_applications
+        description: "Admissions system export of applications and their outcomes."
+        columns:
+          - name: application_id
+            data_tests:
+              - unique:
+                  config:
+                    severity: warn
